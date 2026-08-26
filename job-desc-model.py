@@ -1,3 +1,9 @@
+"""
+Things to consider:
+some new jobs will have words we do not know
+- way around this is to tag words that we do not know with vocab we do know
+"""
+
 import numpy as np
 
 # import nltk
@@ -15,24 +21,35 @@ class JobDescModel:
         self.joblist = job_list
 
         self.model = doc2vec.Doc2Vec(
-            vector_size=64,
-            min_count=5,
-            window=20,
+            vector_size=2,
+            min_count=1,
+            window=3,
             workers=2,
             epochs=2,
         )
 
-        training_data = [
+        self.training_data = [
             doc2vec.TaggedDocument(job_description, [index])
             for index, job_description in enumerate(job_list)
         ]
-        self.model.build_vocab(training_data)
+        self.model.build_vocab(self.training_data)
 
         words = list(self.model.wv.key_to_index.keys())
         print("vocab size:", len(words))
 
     def train(self):
-        pass
+        self.model.train(
+            self.training_data,
+            total_examples=self.model.corpus_count,
+            epochs=self.model.epochs,
+        )
+
+        print("successfully trained the model")
+
+    def predict(self, job_descrip):
+        vector = self.model.infer_vector(job_descrip.split(" ")).tolist()
+
+        return vector
 
 
 if __name__ == "__main__":
@@ -41,5 +58,24 @@ if __name__ == "__main__":
             "This is a software engineer role",
             "This is another job",
             "This is a software developer position and not a role",
+            "This is a job for a software engineer",
+            "This is not a role at all",
         ]
     )
+
+    job_descrip.train()
+
+    # _input = "This is a role"
+    # print(_input)
+    # prediction = job_descrip.predict(_input)
+    # print(prediction)
+
+    # _input = "Software Engineer"
+    # print(_input)
+    # prediction = job_descrip.predict(_input)
+    # print(prediction)
+
+    # _input = "This is a job"
+    # print(_input)
+    # prediction = job_descrip.predict(_input)
+    # print(prediction)
