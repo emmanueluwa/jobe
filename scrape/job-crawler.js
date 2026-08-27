@@ -1,0 +1,141 @@
+/*
+Generic
+
+we will enter a number of different plstforms and do job searches for "Software Engineer"
+- linkdedin
+- indeed
+- another free one   
+
+we will keep scraping till we get a lot of data
+
+*/
+
+const puppeteer = require("puppeteer");
+
+const sleep = (milliseconds) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve();
+    }, milliseconds);
+  });
+};
+
+const delay = 8000 + Math.random() * 12000;
+
+async function dismissCookieBanner(page) {
+  const rejectTexts = [
+    "essential cookies only",
+    "reject all",
+    "reject",
+    "decline",
+    "deny",
+    "only essential",
+    "necessary cookies only",
+    "accept essential",
+    "refuse",
+    "disagree",
+  ];
+
+  // Try buttons and links that contain any of the reject phrases
+  const clicked = await page.evaluate((texts) => {
+    const candidates = Array.from(
+      document.querySelectorAll("button, a, [role='button']"),
+    );
+
+    for (const el of candidates) {
+      // Skip hidden elements
+      if (el.offsetParent === null) continue;
+
+      const text = (el.innerText || el.textContent || "").trim().toLowerCase();
+      if (!text) continue;
+
+      const isReject = texts.some((t) => text.includes(t));
+      if (isReject) {
+        el.click();
+        console.log("clicked");
+        return true;
+      }
+    }
+    return false;
+  }, rejectTexts);
+
+  if (clicked) {
+    // Give the banner time to disappear
+    await sleep(1500 + Math.random() * 1000);
+  }
+
+  return clicked;
+}
+
+// function expression - parsed executed at line of expressions
+const setupBrowser = async () => {
+  const viewportHeight = 1024;
+  const viewportWidth = 1080;
+  const browser = await puppeteer.launch({
+    headless: false,
+    args: [
+      "--disable-dev-shm-usage", // still useful in production
+      // any other non-security flags needed
+    ],
+  });
+
+  const page = await browser.newPage();
+  await page.setDefaultNavigationTimeout(0);
+  await page.setViewport({ width: viewportWidth, height: viewportHeight });
+
+  return [browser, page];
+};
+
+async function getJobUrlList(page) {
+  return await page.evaluate(() => {
+    return Array.from(document.querySelectorAll(".jobTitle a")).map((el) => {
+      return el.href;
+    });
+  });
+}
+
+async function run() {
+  const [browser, page] = await setupBrowser();
+
+  //mock simulated browser
+  await page.setUserAgent(
+    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+  );
+
+  let skipCursor = 0;
+  let hasNewJobs = true;
+
+  let jobsToScrape = [];
+
+  while (hasNewJobs) {
+    await page.goto(
+      `https://uk.indeed.com/jobs?q=software+engineer&start=${skipCursor}`,
+    );
+
+    //get the urls we want
+    let newUrls = [];
+    try {
+      newUrls = await getJobUrlList(page);
+    } catch (e) {
+      console.log(e);
+    }
+
+    skipCursor += 10;
+    if (newUrls.length === 0) {
+      //ending loop here
+      hasNewJobs = false;
+    } else {
+      jobsToScrape = jobsToScrape.concat(newUrls);
+    }
+
+    console.log(jobsToScrape);
+
+    await sleep(delay);
+  }
+
+  for (let jobUrl of jobsToScrape) {
+    // scrape the job info
+  }
+}
+
+run();

@@ -69,13 +69,3 @@ if __name__ == "__main__":
     # print(_input)
     # prediction = job_descrip.predict(_input)
     # print(prediction)
-
-    # _input = "Software Engineer"
-    # print(_input)
-    # prediction = job_descrip.predict(_input)
-    # print(prediction)
-
-    # _input = "This is a job"
-    # print(_input)
-    # prediction = job_descrip.predict(_input)
-    # print(prediction)
