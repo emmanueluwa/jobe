@@ -11,6 +11,9 @@ we will keep scraping till we get a lot of data
 */
 
 const puppeteer = require("puppeteer");
+const { Readability } = require("@mozilla/readability");
+const { JSDOM } = require("jsdom");
+const fs = require("fs");
 
 const sleep = (milliseconds) => {
   return new Promise((resolve) => {
@@ -20,7 +23,7 @@ const sleep = (milliseconds) => {
   });
 };
 
-const delay = 30000 + Math.random() * 15000;
+const delay = 10000 + Math.random() * 15000;
 
 async function dismissCookieBanner(page) {
   const rejectTexts = [
@@ -106,6 +109,22 @@ async function getJobUrlList(page) {
   });
 }
 
+async function getJobDescriptionText(page, url) {
+  const bodyHTML = await page.evaluate(() => {
+    return document.body.outerHTML;
+  });
+
+  const doc = new JSDOM(bodyHTML, {
+    url,
+  });
+
+  const reader = new Readability(doc.window.document);
+  const readabilityInfo = reader.parse();
+  console.log(readabilityInfo);
+
+  return readabilityInfo.textContent;
+}
+
 async function run() {
   const [browser, page] = await continueBrowser();
 
@@ -117,9 +136,15 @@ async function run() {
   let skipCursor = 0;
   let hasNewJobs = true;
 
+  const pageLimit = 20;
+
   let jobsToScrape = [];
 
   while (hasNewJobs) {
+    if (jobsToScrape.length > pageLimit) {
+      break;
+    }
+
     await page.goto(
       `https://uk.indeed.com/jobs?q=software+engineer&start=${skipCursor}`,
       { waitUntil: "domcontentloaded" },
@@ -138,6 +163,7 @@ async function run() {
       newUrls = await getJobUrlList(page);
     } catch (e) {
       console.log(e);
+      break;
     }
 
     console.log(`found ${newUrls.length} links on this page`);
@@ -146,6 +172,7 @@ async function run() {
 
     if (newUrls.length === 0) {
       //ending loop here
+      // natural end of pagination
       hasNewJobs = false;
     } else {
       jobsToScrape = jobsToScrape.concat(newUrls);
@@ -156,9 +183,26 @@ async function run() {
     await sleep(delay);
   }
 
+  const corpus = [];
+
   for (let jobUrl of jobsToScrape) {
     // scrape the job info
+    await page.goto(jobUrl);
+
+    await page.title();
+
+    const jobDescription = await getJobDescriptionText(page, jobUrl);
+
+    corpus.push({
+      description: jobDescription,
+      title: await page.title(),
+      url: jobUrl,
+    });
+
+    await sleep(delay);
   }
+
+  fs.writeFileSync("./job_corpus.json", JSON.stringify(corpus));
 
   browser.disconnect();
   console.log("done");
