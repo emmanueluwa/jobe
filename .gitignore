@@ -1,11 +1,11 @@
 # ==============================================================================
 # 📦 Node.js (Dependencies & Logs)
 # ==============================================================================
-./scrape/node_modules/
-./scrape/npm-debug.log*
-./scrape/yarn-debug.log*
-./scrape/yarn-error.log*
-./scrape/.pnpm-debug.log*
+scrape/node_modules/
+scrape/npm-debug.log*
+scrape/yarn-debug.log*
+scrape/yarn-error.log*
+scrape/.pnpm-debug.log*
 
 # ==============================================================================
 # 🐍 Python (Virtual Envs, Cache & Compiled Files)
