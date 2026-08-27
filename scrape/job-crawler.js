@@ -20,7 +20,7 @@ const sleep = (milliseconds) => {
   });
 };
 
-const delay = 8000 + Math.random() * 12000;
+const delay = 30000 + Math.random() * 15000;
 
 async function dismissCookieBanner(page) {
   const rejectTexts = [
@@ -86,6 +86,18 @@ const setupBrowser = async () => {
   return [browser, page];
 };
 
+const continueBrowser = async () => {
+  const browser = await puppeteer.connect({
+    browserURL: "http://127.0.0.1:9222",
+    defaultViewport: null,
+  });
+
+  const pages = await browser.pages();
+  const page = pages[0] || (await browser.newPage());
+
+  return [browser, page];
+};
+
 async function getJobUrlList(page) {
   return await page.evaluate(() => {
     return Array.from(document.querySelectorAll(".jobTitle a")).map((el) => {
@@ -95,12 +107,12 @@ async function getJobUrlList(page) {
 }
 
 async function run() {
-  const [browser, page] = await setupBrowser();
+  const [browser, page] = await continueBrowser();
 
   //mock simulated browser
-  await page.setUserAgent(
-    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
-  );
+  // await page.setUserAgent(
+  //   "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+  // );
 
   let skipCursor = 0;
   let hasNewJobs = true;
@@ -110,7 +122,15 @@ async function run() {
   while (hasNewJobs) {
     await page.goto(
       `https://uk.indeed.com/jobs?q=software+engineer&start=${skipCursor}`,
+      { waitUntil: "domcontentloaded" },
     );
+    console.log(`navigating to jobs starting from ${skipCursor}`);
+
+    await sleep(delay);
+
+    await dismissCookieBanner(page);
+
+    await sleep(delay);
 
     //get the urls we want
     let newUrls = [];
@@ -120,7 +140,10 @@ async function run() {
       console.log(e);
     }
 
+    console.log(`found ${newUrls.length} links on this page`);
+
     skipCursor += 10;
+
     if (newUrls.length === 0) {
       //ending loop here
       hasNewJobs = false;
@@ -136,6 +159,9 @@ async function run() {
   for (let jobUrl of jobsToScrape) {
     // scrape the job info
   }
+
+  browser.disconnect();
+  console.log("done");
 }
 
 run();
