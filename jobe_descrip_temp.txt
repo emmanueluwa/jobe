@@ -1,0 +1,94 @@
+Job detailsPay£65,000 - £75,000 a yearJob typeFull-time&nbsp;LocationLondon&nbsp;BenefitsPulled from the full job descriptionCompany pension&nbsp;Full job descriptionAbout Us
+H2 Cognitive Designs (H2CD) is a health technology company working at the intersection of cognitive science, clinical research, and large-scale digital assessment. We build platforms used to measure cognitive performance across clinical trials, occupational health programmes, and large institutional deployments in the UK and internationally.
+Our clients include demanding and security-conscious organisations across healthcare, national institutions, and sectors where the performance and reliability of what we build genuinely matter. Our infrastructure is cloud-native, and our engineering team is distributed, collaborative, highly skilled and highly specialised.
+We have a rapidly growing portfolio of significant projects, and this role sits at the heart of how we deliver them.
+The Role
+This is a core engineering position. You will design, develop, and maintain high-quality web and mobile app-based cognitive testing and remote clinical assessment solutions for healthcare providers, academic partners, and related industries.
+What You Will Be Doing
+Software Design and Development
+
+ Design, develop, and implement high-quality full-stack web applications for cognitive assessment and remote clinical testing
+ Write clean, efficient, and well-documented code in Python, Django, JavaScript, HTML, and other relevant languages
+ Collaborate with the development team on technical designs and implementation strategies
+ Develop and maintain RESTful APIs for integration with other systems
+ Implement responsive and accessible user interfaces for web and mobile platforms
+ Participate in code reviews to maintain code quality and knowledge sharing
+
+Software Maintenance
+
+ Learn, maintain, and improve existing software codebases as required by customer or company requirements
+ Ensure software operability across various devices, browsers, and platforms
+ Monitor software performance and implement optimizations as needed
+ Respond efficiently to reported software maintenance and defect requests
+ Maintain accurate version control and documentation of reported issues and remedial actions taken
+ Implement bug fixes and enhancements promptly
+
+Testing and Quality Assurance
+
+ Write and execute unit tests, integration tests, and end-to-end tests
+ Identify and resolve software defects and security vulnerabilities
+ Ensure that all code meets industry standards for security and data protection
+ Apply best practices for test-driven development when appropriate
+ Maintain test documentation and test coverage
+
+Professional Development
+
+ Stay current with industry trends, technologies, and best practices
+ Participate in team meetings and initiatives to support business growth
+ Research and evaluate new technologies that could benefit the company
+ Share knowledge and expertise with team members
+ Propose innovative solutions to technical challenges
+
+What We Are Looking For
+Essential
+
+ Bachelor’s degree in Computer Science, Software Engineering, or related field, or equivalent practical experience
+ Proven experience delivering high-quality full-stack web applications
+ Experience with Django web framework
+ Excellent knowledge of Python, HTML, and JavaScript
+ Strong working knowledge of Git version control
+ Experience with Docker containerization
+ Familiarity with database design and management
+ Ability to work independently and collaboratively in a small team
+ Strong problem-solving skills and attention to detail
+ Excellent time management and ability to meet multiple deadlines
+ Clear communication skills and ability to document work effectively
+ Experience with test-driven development methodologies
+ Familiarity with AWS or other cloud platforms
+
+Desirable
+
+ Knowledge of healthcare IT systems or cognitive assessment tools
+ Understanding of accessibility requirements for web applications
+ Experience with PostgreSQL database management
+ Knowledge of regulatory requirements in healthcare software (e.g., GDPR, HIPAA)
+ Eligible to obtain UK Security Check (SC) clearance (full SC clearance sponsorship provided; clearance is not required on day one). Details can be viewed here: https://www.gov.uk/government/publications/united-kingdom-security-vetting-clearance-levels/national-security-vetting-clearance-levels#security-check-sc
+
+To apply, submit a CV and a short cover letter explaining your interest and relevant experience. Informal enquiries to david.boocock@h2cd.co.uk. No agency applications. This position is not eligible for visa sponsorship.
+Pay: £65,000.00-£75,000.00 per year
+Benefits:
+
+ Company pension
+
+Ability to commute/relocate:
+
+ London: reliably commute or plan to relocate before starting work (required)
+
+Application question(s):
+
+ Are you eligible to obtain a UK Security Check (SC) clearance?
+
+Education:
+
+ Bachelor's (required)
+
+Experience:
+
+ Software development: 5 years (required)
+ Python: 5 years (required)
+
+Work authorisation:
+
+ United Kingdom (required)
+
+Work Location: Hybrid remote in London&nbsp;

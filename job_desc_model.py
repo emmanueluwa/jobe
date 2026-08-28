@@ -40,7 +40,10 @@ class callback(CallbackAny2Vec):
 
 
 class JobDescModel:
-    def __init__(self, job_dataset):
+    def __init__(self, job_dataset=[]):
+        if len(job_dataset) == 0:
+            return
+
         # list of large strings for each job
         self.job_dataset = job_dataset
 
@@ -97,19 +100,28 @@ class JobDescModel:
 
         return vector
 
+    # saving pretrained model
+    def save_model(self):
+        self.model.save("job-descrip.model")
+        print("model saved")
+
+    def load_modal(self):
+        self.model = doc2vec.Doc2Vec.load("job-descrip.model")
+
 
 if __name__ == "__main__":
     f = open("./scrape/job_corpus.json")
     job_dataset = json.load(f)
 
-    job_descrip = JobDescModel(job_dataset)
+    job_descrip = JobDescModel(job_dataset=job_dataset)
 
     job_descrip.train()
 
     job_descrip.generate_embeddings_for_dataset()
     job_descrip.save_dataset()
 
-    # _input = "This is a role"
+    job_descrip.save_model()
+
     # print(_input)
     # prediction = job_descrip.predict(_input)
     # print(prediction)
