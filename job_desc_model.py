@@ -7,6 +7,8 @@ some new jobs will have words we do not know
 import json
 import time
 import numpy as np
+from numpy.linalg import norm
+
 
 import nltk
 
@@ -65,8 +67,8 @@ class JobDescModel:
 
     def process_training_data(self):
         training_data = [
-            doc2vec.TaggedDocument(simple_preprocess(job["description"]), [index])
-            for index, job in enumerate(job_dataset)
+            doc2vec.TaggedDocument(nltk.word_tokenize(job["description"]), [index])
+            for index, job in enumerate(self.job_dataset)
         ]
 
         return training_data
@@ -86,7 +88,7 @@ class JobDescModel:
     def generate_embeddings_for_dataset(self):
         print("Generating dataset...")
         for i, job in enumerate(self.job_dataset):
-            embedding = self.predict(job["description"])
+            embedding = self.predict(job["description"]).tolist()
             self.job_dataset[i]["embedding"] = embedding
 
     def save_dataset(self):
@@ -96,7 +98,7 @@ class JobDescModel:
             f.write(json.dumps(self.job_dataset))
 
     def predict(self, job_descrip):
-        vector = self.model.infer_vector(simple_preprocess(job_descrip)).tolist()
+        vector = self.model.infer_vector(nltk.word_tokenize(job_descrip))
 
         return vector
 
@@ -105,8 +107,23 @@ class JobDescModel:
         self.model.save("job-descrip.model")
         print("model saved")
 
-    def load_modal(self):
+    def load_model(self):
         self.model = doc2vec.Doc2Vec.load("job-descrip.model")
+
+    def most_similar(self, description, top_n=10):
+        for i, job in enumerate(self.job_dataset):
+            A = self.predict(description)
+            B = self.predict(job["description"])
+            # compute cosine similarity
+            score = np.dot(A, B) / (norm(A) * norm(B))
+
+            print("score", score)
+            self.job_dataset[i]["score"] = score
+
+        dataset = list(
+            map(lambda x: {"title": x["title"], "score": x["score"]}, self.job_dataset)
+        )
+        return sorted(dataset, key=lambda d: d["score"], reverse=True)[:top_n]
 
 
 if __name__ == "__main__":
